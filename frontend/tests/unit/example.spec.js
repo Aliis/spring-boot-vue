@@ -1,12 +1,10 @@
-import { shallowMount } from '@vue/test-utils'
-import HelloWorld from '@/components/HelloWorld.vue'
+import { shallowMount } from '@vue/test-utils';
+import User from '@/components/User'
 
-describe('HelloWorld.vue', () => {
-  it('renders props.msg when passed', () => {
-    const msg = 'new message'
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
+describe('User.vue', () => {
+    it('should render Create User Button', () => {
+        const wrapper = shallowMount(User);
+        const contentButton = wrapper.find('v-btn');
+        expect(contentButton.text()).toEqual('Create User');
     })
-    expect(wrapper.text()).toMatch(msg)
-  })
 })
