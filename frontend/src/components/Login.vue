@@ -1,42 +1,114 @@
 <template>
-    <v-dialog
-            v-model="dialog"
-            width="500"
-    >
-        <v-btn
-            color="blue lighten-2"
-            dark
-            @click="dialog = true" flat slot="activator" >Login
-        </v-btn>
-        <v-card>
-
-            <user/>
-
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                        color="primary"
-                        flat
-                        @click="dialog = false"
-                >
-                    Close
-                </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+    <v-container>
+    <div class="logins">
+        <h3>Sign In / Create new user</h3>
+        <v-form @submit.prevent="emailLogin">
+            <div class="email-login">
+                <v-text-field v-model="email" label="Email" type="text"></v-text-field>
+                <v-text-field v-model="password" label="Password" type="text"></v-text-field>
+                <v-btn  type="submit" @click="emailLogin" class="right" color="info" >Login</v-btn>
+            </div>
+        </v-form>
+        <div class="google-login">
+            <button @click="googleLogin" class="social-button">
+                <img alt="Google logo"
+                     src="https://diylogodesigns.com/wp-content/uploads/2016/04/google-logo-icon-PNG-Transparent-Background-768x768.png">
+            </button>
+        </div>
+        <div class="fb-login">
+            <button @click="fbLogin" class="social-button">
+                <img alt="Facebook logo" src="http://www.stickpng.com/assets/images/584ac2d03ac3a570f94a666d.png">
+            </button>
+        </div>
+    </div>
+    </v-container>
 </template>
 
 <script>
-    import user from './LoginModalContent'
+    import firebase from 'firebase'
+    import {AXIOS} from './http-common'
+
+    const config = {
+        apiKey: "AIzaSyB5am9vDj6XghD_atAZN0FKbW-9sZ0azMs",
+        authDomain: "spring-boot-vue-1545055785370.firebaseapp.com",
+        databaseURL: "https://spring-boot-vue-1545055785370.firebaseio.com",
+        projectId: "spring-boot-vue-1545055785370",
+        storageBucket: "spring-boot-vue-1545055785370.appspot.com",
+        messagingSenderId: "217594607633"
+    }
+
+    firebase.initializeApp(config)
+
     export default {
-        name: 'signinmodal',
-        components: {
-            user
-        },
-        data () {
+        name: 'Login',
+        data() {
             return {
-                dialog: false
+                email: '',
+                password: '',
+                params: '',
+                signInMethod: ''
+            }
+        },
+        methods: {
+            sendToDB() {
+                let that = this;
+                AXIOS.post('/login', that.params).then((result) => {
+                    console.log(result.data)
+                    this.email = ''
+                    this.password = ''
+                }).catch((err) => {
+                    alert('Oops. ' + err.message)
+                });
+            },
+            emailLogin() {
+                let that = this;
+                that.params = {
+                    'userName': this.email,
+                    'password': this.password
+                }
+                that.sendToDB()
+            },
+            signInWithPopup(provider) {
+                let that = this;
+                firebase.auth().signInWithPopup(provider).then((result) => {
+                    result.user.getIdToken().then(function(idToken) {
+                        that.params = {
+                            'uid': idToken,
+                            'method': that.signInMethod
+                        }
+                        that.sendToDB()
+                    });
+                }).catch((err) => {
+                    alert('Oops. ' + err.message)
+                });
+            },
+            googleLogin() {
+                this.signInMethod = 'gl'
+                this.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+            },
+            fbLogin() {
+                this.signInMethod = 'fb'
+                this.signInWithPopup(new firebase.auth.FacebookAuthProvider())
             }
         }
     }
 </script>
+
+<style scoped>  /* "scoped" attribute limit the CSS to this component only */
+p {
+    margin-top: 40px;
+    font-size: 13px;
+}
+.right {
+    margin-right: 0;
+}
+.google-login {
+    margin:  20px 0;
+    clear: both;
+}
+.social-button {
+}
+.social-button img {
+    width: 40px;
+}
+</style>

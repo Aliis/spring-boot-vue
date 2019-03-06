@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["about"],{deff:function(e,n,t){},e76e:function(e,n,t){"use strict";var u=t("deff"),o=t.n(u);o.a},f820:function(e,n,t){"use strict";t.r(n);var u=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("h1",[e._v("About")])},o=[],c=(t("cadf"),t("551c"),t("097d"),void 0),f=(t("e76e"),t("2877")),i=Object(f["a"])(c,u,o,!1,null,null,null);i.options.__file="About.vue";n["default"]=i.exports}}]);
+//# sourceMappingURL=about.fb417886.js.map

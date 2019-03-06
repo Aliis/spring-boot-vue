@@ -1,4 +1,15 @@
-com\example\DemoApplication.class
 com\example\repository\UserRepository.class
+com\example\domain\Role.class
+com\example\config\handlers\ApiAccessDeniedHandler.class
+com\example\domain\CustomUserDetails.class
+com\example\config\SecurityConfiguration.class
+com\example\config\handlers\ApiEntryPoint.class
+com\example\config\LoginCredentials.class
+com\example\config\handlers\ApiLogoutSuccessHandler.class
+com\example\config\handlers\ApiAuthSuccessHandler.class
+com\example\service\CustomUserDetailsService.class
 com\example\controller\BackendController.class
 com\example\domain\User.class
+com\example\config\handlers\ApiAuthFailureHandler.class
+com\example\config\ApiAuthenticationFilter.class
+com\example\FirebaseAppInitializer.class

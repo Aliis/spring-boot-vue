@@ -1,38 +1,39 @@
 <template>
   <v-app>
-    <!--<v-toolbar app>-->
-      <!--<v-toolbar-title class="headline text-uppercase">-->
-        <!--<span>Vuetify</span>-->
-        <!--<span class="font-weight-light">MATERIAL DESIGN</span>-->
-      <!--</v-toolbar-title>-->
-      <!--<v-spacer></v-spacer>-->
-      <!--<v-btn-->
-        <!--flat-->
-        <!--href="https://github.com/vuetifyjs/vuetify/releases/latest"-->
-        <!--target="_blank"-->
-      <!--&gt;-->
-        <!--<span class="mr-2">Latest Release</span>-->
-      <!--</v-btn>-->
-    <!--</v-toolbar>-->
-
     <v-content>
-      <user/>
+      <v-toolbar dark>
+        <v-toolbar-side-icon></v-toolbar-side-icon>
+        <v-toolbar-title>Title</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+          <v-btn href="/api/logout" class="right" color="white" flat >Logout</v-btn>
+        </v-toolbar-items>
+      </v-toolbar>
+      <router-view></router-view>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import user from './components/User'
-
-export default {
-  name: 'App',
-  components: {
-    user
-  },
-  data () {
-    return {
-      //
+    export default {
+      name: 'App',
+      data () {
+        return {
+          //
+        }
+      }
     }
-  }
-}
 </script>
+<style>
+  html {   overflow-y: auto!important;}
+  .v-dialog__activator {
+    height: 100%;
+  }
+  h1, h2 {
+    font-weight: normal;
+    margin-bottom: 10px;
+  }
+</style>
+
+
+

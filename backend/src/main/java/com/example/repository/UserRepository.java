@@ -1,17 +1,15 @@
 package com.example.repository;
 
 import com.example.domain.User;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-public interface UserRepository extends CrudRepository<User, Long> {
-
-    List<User> findByLastName(@Param("lastname") String lastname);
-
-    List<User> findByFirstName(@Param("firstname") String firstname);
-
-    User findById(@Param("id") Long id);
+    User getUserById(@Param("id") Integer id);
+    User findByEmail(String email);
+    User findByGoogleID(String googleID);
 
 }
