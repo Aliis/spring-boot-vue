@@ -2,16 +2,28 @@ package com.example.config;
 
 import com.example.domain.User;
 import com.example.repository.UserRepository;
+import com.example.service.CustomUserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 
 public class ApiAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
@@ -42,17 +54,14 @@ public class ApiAuthenticationFilter extends AbstractAuthenticationProcessingFil
             user.setEmail(loginCredentials.getUserName());
             user.setPassword(loginCredentials.getPassword());
             userRepository.save(user);
-            //andmebaasi salvestab, aga http://localhost:8088/api/user/1 vastab 401.
-            // Sisselogimisel 500 java.lang.IllegalArgumentException: Principal must not be null
-            // A see juhtub aint muki.kuki@mail.ee kontoga.
-            return null;
         }
 
         UsernamePasswordAuthenticationToken authRequest =
-                    new UsernamePasswordAuthenticationToken(
-                            loginCredentials.getUserName(),
-                            loginCredentials.getPassword());
+                new UsernamePasswordAuthenticationToken(
+                        loginCredentials.getUserName(),
+                        loginCredentials.getPassword());
 
-        return this.getAuthenticationManager().authenticate(authRequest);
+        SecurityContextHolder.getContext().setAuthentication(authRequest);
+        return getAuthenticationManager().authenticate(authRequest);
     }
 }

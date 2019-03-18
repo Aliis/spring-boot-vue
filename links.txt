@@ -1,0 +1,8 @@
+Login with token 
+https://scotch.io/tutorials/vue-authentication-and-route-handling-using-vue-router
+
+JWT Authentication Tutorial: An example using Spring Boot
+http://www.svlada.com/jwt-token-authentication-with-spring-boot/
+
+How do I handle login/registration and sessions with vue-router and axios for an SPA
+https://laracasts.com/discuss/channels/vue/how-do-i-handle-loginregistration-and-sessions-with-vue-router-and-axios-for-an-spa

@@ -1,14 +1,6 @@
 <template>
   <v-app>
     <v-content>
-      <v-toolbar dark>
-        <v-toolbar-side-icon></v-toolbar-side-icon>
-        <v-toolbar-title>Title</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-btn href="/api/logout" class="right" color="white" flat >Logout</v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
       <router-view></router-view>
     </v-content>
   </v-app>
@@ -19,7 +11,7 @@
       name: 'App',
       data () {
         return {
-          //
+          email: ''
         }
       }
     }

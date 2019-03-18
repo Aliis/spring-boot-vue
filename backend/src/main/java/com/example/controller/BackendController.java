@@ -1,4 +1,5 @@
 package com.example.controller;
+import com.example.domain.CustomUserDetails;
 import com.example.domain.User;
 import com.example.repository.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
@@ -8,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -82,7 +87,7 @@ public class BackendController {
 
     @GetMapping(path="/user/info")
     public @ResponseBody
-    String info(Principal principal) {
-        return "Current user: " + principal.getName();
+    String info(@AuthenticationPrincipal CustomUserDetails customUser) {
+        return customUser.getEmail();
     }
 }

@@ -1,26 +1,35 @@
 <template>
     <v-container>
-    <div class="logins">
-        <h3>Sign In / Create new user</h3>
-        <v-form @submit.prevent="emailLogin">
+        <div class="login">
+            <h3>Sign In / Create new user</h3>
             <div class="email-login">
-                <v-text-field v-model="email" label="Email" type="text"></v-text-field>
-                <v-text-field v-model="password" label="Password" type="text"></v-text-field>
-                <v-btn  type="submit" @click="emailLogin" class="right" color="info" >Login</v-btn>
+                <v-alert class="alert"
+                         :value="true"
+                        v-model="alert"
+                        dismissible
+                        type="error"
+                        outline
+                >
+                    {{loginAlertMessage}}
+                </v-alert>
+                <v-form>
+                    <v-text-field v-model="email" label="Email" type="text"></v-text-field>
+                    <v-text-field v-model="password" label="Password" type="text"></v-text-field>
+                    <v-btn @click="submitEmailLogin" class="right" color="info" >Login</v-btn>
+                </v-form>
             </div>
-        </v-form>
-        <div class="google-login">
-            <button @click="googleLogin" class="social-button">
-                <img alt="Google logo"
-                     src="https://diylogodesigns.com/wp-content/uploads/2016/04/google-logo-icon-PNG-Transparent-Background-768x768.png">
-            </button>
+            <div class="google-login">
+                <button @click="googleLogin" class="social-button">
+                    <img alt="Google logo"
+                         src="https://diylogodesigns.com/wp-content/uploads/2016/04/google-logo-icon-PNG-Transparent-Background-768x768.png">
+                </button>
+            </div>
+            <div class="fb-login">
+                <button @click="fbLogin" class="social-button">
+                    <img alt="Facebook logo" src="http://www.stickpng.com/assets/images/584ac2d03ac3a570f94a666d.png">
+                </button>
+            </div>
         </div>
-        <div class="fb-login">
-            <button @click="fbLogin" class="social-button">
-                <img alt="Facebook logo" src="http://www.stickpng.com/assets/images/584ac2d03ac3a570f94a666d.png">
-            </button>
-        </div>
-    </div>
     </v-container>
 </template>
 
@@ -46,27 +55,28 @@
                 email: '',
                 password: '',
                 params: '',
-                signInMethod: ''
+                signInMethod: '',
+                alert: false,
+                loginAlertMessage: 'Something went wrong, let\'s take a coffee and try again'
             }
         },
         methods: {
-            sendToDB() {
+            sendToDB(url) {
                 let that = this;
-                AXIOS.post('/login', that.params).then((result) => {
-                    console.log(result.data)
-                    this.email = ''
-                    this.password = ''
+                AXIOS.post(url, that.params).then(() => {
+                    this.$session.start();
+                    this.$router.push('/user')
                 }).catch((err) => {
-                    alert('Oops. ' + err.message)
+                  that.alert = true;
                 });
             },
-            emailLogin() {
+            submitEmailLogin() {
                 let that = this;
                 that.params = {
                     'userName': this.email,
                     'password': this.password
                 }
-                that.sendToDB()
+                that.sendToDB('/login')
             },
             signInWithPopup(provider) {
                 let that = this;
@@ -74,12 +84,12 @@
                     result.user.getIdToken().then(function(idToken) {
                         that.params = {
                             'uid': idToken,
-                            'method': that.signInMethod
+                            // 'method': that.signInMethod
                         }
-                        that.sendToDB()
+                        that.sendToDB('/login/firebase')
                     });
-                }).catch((err) => {
-                    alert('Oops. ' + err.message)
+                }).catch(() => {
+                    that.alert = true;
                 });
             },
             googleLogin() {
@@ -90,7 +100,7 @@
                 this.signInMethod = 'fb'
                 this.signInWithPopup(new firebase.auth.FacebookAuthProvider())
             }
-        }
+        },
     }
 </script>
 
@@ -110,5 +120,10 @@ p {
 }
 .social-button img {
     width: 40px;
+}
+
+.alert{
+    margin-top: 20px;
+    margin-bottom: 40px;
 }
 </style>

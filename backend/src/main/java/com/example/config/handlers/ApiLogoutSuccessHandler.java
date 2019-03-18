@@ -15,5 +15,6 @@ public class ApiLogoutSuccessHandler implements org.springframework.security.web
                                 Authentication authentication) throws IOException, ServletException {
 
         response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().flush();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.config.LoginCredentials;
 import com.example.domain.CustomUserDetails;
 import com.example.domain.User;
 import com.example.repository.UserRepository;

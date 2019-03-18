@@ -28,6 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(new FirebaseAuthenticationProvider(getApplicationContext()));
         auth.userDetailsService(userDetailsService);
     }
 
@@ -36,10 +37,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         httpSecurity.csrf().disable();
         httpSecurity.authorizeRequests()
-                .antMatchers("/api/user").permitAll()
                 .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/logout").permitAll()
-                .antMatchers("/api/user/**").authenticated();
+                .antMatchers("/api/logout").authenticated()
+                .antMatchers("/api/user").authenticated();
 
         httpSecurity.exceptionHandling().authenticationEntryPoint(new ApiEntryPoint());
         httpSecurity.exceptionHandling().accessDeniedHandler(new ApiAccessDeniedHandler());
@@ -47,11 +47,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
         httpSecurity.addFilterAfter(restLoginFilter("/api/login"), LogoutFilter.class);
-
+        httpSecurity.addFilterAfter(fireBaseLoginFilter("/api/login/firebase"), LogoutFilter.class);
     }
 
     private Filter restLoginFilter(String url) throws Exception {
         ApiAuthenticationFilter filter = new ApiAuthenticationFilter(url, getApplicationContext());
+
+        filter.setAuthenticationManager(authenticationManager());
+        filter.setAuthenticationSuccessHandler(new ApiAuthSuccessHandler());
+        filter.setAuthenticationFailureHandler(new ApiAuthFailureHandler());
+        return filter;
+    }
+
+    private Filter fireBaseLoginFilter(String url) throws Exception {
+        FirebaseAuthenticationFilter filter = new FirebaseAuthenticationFilter(url);
 
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(new ApiAuthSuccessHandler());
